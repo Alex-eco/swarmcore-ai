@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+:root{--bg:#05070b;--panel:#0a0e16;--line:rgba(148,163,184,.16);--text:#eef2f7;--muted:#8d99aa;--accent:#7dd3fc;--accent2:#a78bfa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+a{text-decoration:none;color:inherit}
+::selection{background:rgba(125,211,252,.22)}
+.grid-bg{background-image:linear-gradient(rgba(148,163,184,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.055) 1px,transparent 1px);background-size:48px 48px}
+.glow{box-shadow:0 0 80px rgba(125,211,252,.09)}
