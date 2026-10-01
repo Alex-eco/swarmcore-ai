@@ -10,35 +10,62 @@ async function main() {
   if (!process.env.SUPERTEAM_AGENT_API_KEY) throw new Error("SUPERTEAM_AGENT_API_KEY is not configured");
   if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
-  let payload = await getLiveAgentListings({ take: 50 });
+  // Scan the complete agent-eligible bounty pool, not just the first generic feed page.
+  let payload = await getLiveAgentListings({ take: 100, type: "bounty" });
   let listings = normalizeListings(payload);
-  let discoverySource = "agent-live";
+  let discoverySource = "agent-live:bounty";
 
   if (listings.length === 0) {
     const fallback = await getOpenAgentListingsFallback({ take: 100 });
-    listings = normalizeListings(fallback);
-    discoverySource = "public-feed-fallback";
+    listings = normalizeListings(fallback).filter((item) => item.type === "bounty" || !item.type);
+    discoverySource = "public-feed-fallback:bounty";
   }
 
   const allowed = listings.filter((item) =>
     item.agentAccess === "AGENT_ALLOWED" || item.agentAccess === "AGENT_ONLY"
   );
 
-  const results = [];
+  const detailed = [];
   for (const listing of allowed) {
     try {
       const details = listing.slug ? await getListingDetails(listing.slug) : listing.raw;
-      const detailedListing = normalizeListings([details])[0] ?? listing;
-      const analysis = await analyzeListing(detailedListing);
-      results.push({ listing: detailedListing, analysis });
+      detailed.push(normalizeListings([details])[0] ?? listing);
+    } catch (error) {
+      detailed.push({
+        ...listing,
+        detailError: error instanceof Error ? error.message : "Unknown details error",
+      });
+    }
+  }
+
+  // Gemini free-tier limit is 20 requests/day. Prioritize higher-value and earlier-deadline bounties.
+  const prioritized = [...detailed].sort((a, b) => {
+    const ad = a.deadline ? Date.parse(a.deadline) : Number.MAX_SAFE_INTEGER;
+    const bd = b.deadline ? Date.parse(b.deadline) : Number.MAX_SAFE_INTEGER;
+    if (ad !== bd) return ad - bd;
+    return JSON.stringify(b.reward ?? "").localeCompare(JSON.stringify(a.reward ?? ""));
+  });
+
+  const analysisLimit = 20;
+  const results = [];
+  for (const listing of prioritized.slice(0, analysisLimit)) {
+    try {
+      const analysis = await analyzeListing(listing);
+      results.push({ listing, analysis });
     } catch (error) {
       results.push({
         listing,
         analysis: null,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : "Unknown analysis error",
       });
     }
   }
+
+  const unanalysed = prioritized.slice(analysisLimit).map((listing) => ({
+    listing,
+    analysis: null,
+    error: "Gemini daily request budget reserved; not analyzed in this run",
+  }));
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -47,7 +74,9 @@ async function main() {
     discoverySource,
     scanned: listings.length,
     agentEligible: allowed.length,
-    results,
+    detailed: detailed.length,
+    geminiAnalyzed: results.length,
+    results: [...results, ...unanalysed],
     policy: {
       zeroCostRequired: true,
       autonomousExecutionRequired: true,
