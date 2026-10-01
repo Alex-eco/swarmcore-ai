@@ -1,6 +1,9 @@
 name: SwarmCore Bounty Hunter
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     - cron: "17 */2 * * *"
