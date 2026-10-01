@@ -26,6 +26,20 @@ function getApiKey() {
   return apiKey;
 }
 
+async function publicRequest<T>(path: string): Promise<T> {
+  const response = await fetch(`${BASE_URL}${path}`, {
+    headers: { Accept: "application/json" },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Superteam public API ${response.status}: ${body.slice(0, 500)}`);
+  }
+
+  return response.json() as Promise<T>;
+}
+
 async function superteamRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${BASE_URL}${path}`, {
     ...init,
@@ -58,6 +72,19 @@ export async function getLiveAgentListings(options: {
 
   return superteamRequest<SuperteamListing[] | { listings?: SuperteamListing[] }>(
     `/api/agents/listings/live?${params.toString()}`,
+  );
+}
+
+export async function getOpenAgentListingsFallback(options: { take?: number } = {}) {
+  const take = Math.min(Math.max(options.take ?? 100, 1), 100);
+  const payload = await publicRequest<SuperteamListing[] | { listings?: SuperteamListing[] }>(
+    `/api/listings?take=${take}`,
+  );
+  const listings = Array.isArray(payload) ? payload : payload.listings ?? [];
+  return listings.filter(
+    (item) =>
+      item.status === "OPEN" &&
+      (item.agentAccess === "AGENT_ALLOWED" || item.agentAccess === "AGENT_ONLY"),
   );
 }
 
