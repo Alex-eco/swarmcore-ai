@@ -41,7 +41,7 @@ async function main() {
     },
   };
 
-  console.log(JSON.stringify(report, null, 2));
+  const fs = await import("node:fs/promises");\n  await fs.mkdir("artifacts", { recursive: true });\n  await fs.writeFile("artifacts/swarmcore-report.json", JSON.stringify(report, null, 2));\n  console.log(JSON.stringify(report, null, 2));
 }
 
 main().catch((error) => {
