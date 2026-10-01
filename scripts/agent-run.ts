@@ -6,10 +6,6 @@ async function main() {
   if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
   const payload = await getLiveAgentListings({ take: 50 });
-  const payloadSummary = Array.isArray(payload)
-    ? { kind: "array", length: payload.length, sampleKeys: Object.keys(payload[0] ?? {}) }
-    : { kind: "object", keys: Object.keys(payload), sampleKeys: Object.keys((payload as Record<string, unknown>).listings?.[0] ?? {}) };
-
   const listings = normalizeListings(payload);
 
   const allowed = listings.filter((item) =>
@@ -36,7 +32,6 @@ async function main() {
     username: "swarmcore-purple-22",
     scanned: listings.length,
     agentEligible: allowed.length,
-    payloadSummary,
     results,
     policy: {
       autonomousSubmission: "enabled only when a concrete valid submission artifact/link exists and no human-required action is present",
