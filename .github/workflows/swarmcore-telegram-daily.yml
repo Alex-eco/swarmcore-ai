@@ -1,0 +1,104 @@
+name: SwarmCore Daily Telegram Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  telegram-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Find latest successful SwarmCore scan
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          RUN_ID=$(gh run list             --repo "${GITHUB_REPOSITORY}"             --workflow "swarmcore-bounty-hunter.yml"             --status success             --limit 1             --json databaseId             --jq '.[0].databaseId')
+          if [ -z "${RUN_ID}" ] || [ "${RUN_ID}" = "null" ]; then
+            echo "No successful SwarmCore scan found."
+            exit 1
+          fi
+          echo "run_id=${RUN_ID}" >> "${GITHUB_OUTPUT}"
+
+      - name: Download latest SwarmCore report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p daily-report
+          gh run download "${{ steps.latest.outputs.run_id }}"             --repo "${GITHUB_REPOSITORY}"             --name swarmcore-report             --dir daily-report
+          test -s daily-report/swarmcore-report.json
+
+      - name: Build Telegram message
+        id: message
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const report = JSON.parse(fs.readFileSync("daily-report/swarmcore-report.json", "utf8"));
+          const results = Array.isArray(report.results) ? report.results : [];
+          const analyzed = results.filter(x => x.analysis);
+          const eligible = analyzed.filter(x => x.analysis?.eligible);
+          const autonomous = eligible.filter(x =>
+            x.analysis?.autonomous === true &&
+            x.analysis?.zeroCost === true &&
+            x.analysis?.spendingRequired !== true &&
+            x.analysis?.humanActionRequired !== true
+          );
+
+          const rewardText = (reward) => {
+            if (reward == null) return "n/a";
+            if (typeof reward === "string") return reward;
+            try { return JSON.stringify(reward); } catch { return String(reward); }
+          };
+
+          const top = autonomous.slice(0, 5).map((x, i) => {
+            const l = x.listing || {};
+            const a = x.analysis || {};
+            const title = l.title || l.name || l.slug || l.id || "Untitled";
+            const deadline = l.deadline || "no deadline";
+            return `${i + 1}. ${title}
+   Reward: ${rewardText(l.reward)}
+   Deadline: ${deadline}
+   Confidence: ${Math.round((Number(a.confidence) || 0) * 100)}%
+`;
+          }).join("\n");
+
+          const date = new Date().toISOString().slice(0, 10);
+          const lines = [
+            "🤖 SwarmCore — Daily Report",
+            `📅 ${date}`,
+            "",
+            `Scanned: ${report.scanned ?? 0}`,
+            `Agent eligible: ${report.agentEligible ?? 0}`,
+            `AI analyzed: ${report.geminiAnalyzed ?? analyzed.length}`,
+            `Autonomous + zero-cost: ${autonomous.length}`,
+            ""
+          ];
+
+          if (top) {
+            lines.push("🔥 Top opportunities", "", top);
+          } else {
+            lines.push("No analyzed opportunity currently passes the autonomous + zero-cost filter.");
+          }
+
+          lines.push("", `Source: ${report.discoverySource || "unknown"}`, "Status: ✅ report generated");
+          fs.writeFileSync("telegram-message.txt", lines.join("\n"));
+          NODE
+
+      - name: Send report to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "${TELEGRAM_BOT_TOKEN}"
+          test -n "${TELEGRAM_CHAT_ID}"
+          MESSAGE=$(cat telegram-message.txt)
+          curl --fail --silent --show-error             -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}"             --data-urlencode "text=${MESSAGE}"             --data-urlencode "disable_web_page_preview=true"
