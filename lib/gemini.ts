@@ -8,7 +8,7 @@ export type GeminiAnalysis = {
   notes: string[];
 };
 
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-1.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 function getKey() {
