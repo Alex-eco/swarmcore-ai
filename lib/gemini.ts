@@ -4,11 +4,17 @@ export type GeminiAnalysis = {
   categoryFit: string[];
   reasoning: string;
   plan: string[];
+  zeroCost: boolean;
+  autonomous: boolean;
+  spendingRequired: boolean;
+  humanActionRequired: boolean;
+  walletSigningRequired: boolean;
+  kyc: "required" | "not_required" | "unknown";
   submissionReady: boolean;
   notes: string[];
 };
 
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
 const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 
 function getKey() {
@@ -28,12 +34,15 @@ export async function analyzeListing(listing: {
   reward?: unknown;
   compensationType?: string | null;
   skills?: string[];
+  raw?: unknown;
 }) {
   const prompt = [
     "You are SwarmCore, an autonomous bounty-hunting agent.",
-    "Analyze the Superteam listing below.",
-    "Focus on whether an AI agent can execute it autonomously with zero monetary entry cost.",
-    "Prioritize smart contracts/Solidity, Web3 development, DeFi/crypto research, protocol analysis, AI×Web3, and agent-executable content/community work.",
+    "Analyze the FULL Superteam listing contract below.",
+    "Our primary filter is zero monetary entry cost and autonomous execution.",
+    "KYC is informational only and must NOT by itself make a listing ineligible.",
+    "Wallet signing is allowed in principle, including zero-value signatures or transactions, but spending money is forbidden without explicit human approval.",
+    "A human-required action, paid transaction, deposit, purchase, or other monetary spend makes the listing not autonomously executable for the current MVP.",
     "Do not invent requirements, rewards, deadlines, or capabilities.",
     "Return ONLY valid JSON matching the requested schema.",
     "",
@@ -46,6 +55,12 @@ export async function analyzeListing(listing: {
       categoryFit: ["string"],
       reasoning: "string",
       plan: ["short actionable step"],
+      zeroCost: "boolean",
+      autonomous: "boolean",
+      spendingRequired: "boolean",
+      humanActionRequired: "boolean",
+      walletSigningRequired: "boolean",
+      kyc: "required | not_required | unknown",
       submissionReady: "boolean",
       notes: ["string"],
     }),
