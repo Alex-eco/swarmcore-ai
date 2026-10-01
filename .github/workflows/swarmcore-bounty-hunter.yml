@@ -1,6 +1,9 @@
 name: SwarmCore Bounty Hunter
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     - cron: "17 */2 * * *"
@@ -32,4 +35,11 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
         run: npm run agent:run
-\n      - name: Upload SwarmCore report\n        if: always()\n        uses: actions/upload-artifact@v4\n        with:\n          name: swarmcore-report\n          path: artifacts/swarmcore-report.json\n          if-no-files-found: ignore\n
+
+      - name: Upload SwarmCore report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: swarmcore-report
+          path: artifacts/swarmcore-report.json
+          if-no-files-found: ignore
