@@ -1,6 +1,7 @@
 import {
   getLiveAgentListings,
   getOpenAgentListingsFallback,
+  getListingDetails,
   normalizeListings,
 } from "../lib/superteam";
 import { analyzeListing } from "../lib/gemini";
@@ -26,8 +27,10 @@ async function main() {
   const results = [];
   for (const listing of allowed) {
     try {
-      const analysis = await analyzeListing(listing);
-      results.push({ listing, analysis });
+      const details = listing.slug ? await getListingDetails(listing.slug) : listing.raw;
+      const detailedListing = normalizeListings([details])[0] ?? listing;
+      const analysis = await analyzeListing(detailedListing);
+      results.push({ listing: detailedListing, analysis });
     } catch (error) {
       results.push({
         listing,
@@ -46,10 +49,13 @@ async function main() {
     agentEligible: allowed.length,
     results,
     policy: {
-      autonomousSubmission: "enabled only when a concrete valid submission artifact/link exists and no human-required action is present",
-      money: "never spend funds",
-      walletSigning: "never",
-      kyc: "never",
+      zeroCostRequired: true,
+      autonomousExecutionRequired: true,
+      humanActionRequired: false,
+      spending: "never without explicit human approval",
+      walletSigning: "allowed only for zero-value/no-spend actions when a secure signer is available",
+      kyc: "informational only; not an execution blocker",
+      autonomousSubmission: "only when submission is concrete, valid, zero-cost, and requires no human action",
     },
   };
 
