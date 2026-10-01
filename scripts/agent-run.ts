@@ -46,7 +46,9 @@ async function main() {
     return JSON.stringify(b.reward ?? "").localeCompare(JSON.stringify(a.reward ?? ""));
   });
 
-  const analysisLimit = 20;
+  // The free Gemini quota is daily, while this workflow runs every 2 hours.
+  // Keep each scheduled run small so repeated scans do not exhaust the daily budget.
+  const analysisLimit = Math.min(3, prioritized.length);
   const results = [];
   for (const listing of prioritized.slice(0, analysisLimit)) {
     try {
