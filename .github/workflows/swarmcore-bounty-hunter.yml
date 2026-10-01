@@ -23,12 +23,12 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci
+        run: npm install
 
       - name: Run SwarmCore
         env:
           SUPERTEAM_AGENT_API_KEY: ${{ secrets.SUPERTEAM_AGENT_API_KEY }}
           SUPERTEAM_CLAIM_CODE: ${{ secrets.SUPERTEAM_CLAIM_CODE }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-1.5-flash
+          GEMINI_MODEL: gemini-2.5-flash
         run: npm run agent:run
