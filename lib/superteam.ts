@@ -53,7 +53,7 @@ export async function getLiveAgentListings(options: {
 } = {}) {
   const params = new URLSearchParams();
   params.set("take", String(Math.min(Math.max(options.take ?? 20, 1), 100)));
-  params.set("deadline", options.deadline ?? new Date().toISOString());
+  if (options.deadline) params.set("deadline", options.deadline);
   if (options.type) params.set("type", options.type);
 
   return superteamRequest<SuperteamListing[] | { listings?: SuperteamListing[] }>(
