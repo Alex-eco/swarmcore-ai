@@ -23,7 +23,7 @@ function getKey() {
   return key;
 }
 
-export async function analyzeListing(listing: {
+async function analyzeListingOnce(listing: {
   id?: string | null;
   slug?: string | null;
   type?: string | null;
@@ -82,7 +82,12 @@ export async function analyzeListing(listing: {
   );
 
   if (!response.ok) {
-    throw new Error(`Gemini API ${response.status}: ${(await response.text()).slice(0, 500)}`);
+    const body = await response.text();
+    const retryable = response.status === 429 || response.status === 500 || response.status === 502 || response.status === 503 || response.status === 504;
+    throw Object.assign(
+      new Error(`Gemini API ${response.status}: ${body.slice(0, 500)}`),
+      { retryable },
+    );
   }
 
   const data = await response.json() as any;
@@ -90,4 +95,21 @@ export async function analyzeListing(listing: {
   if (!text) throw new Error("Gemini returned no text");
 
   return JSON.parse(text) as GeminiAnalysis;
+}
+
+export async function analyzeListing(listing: Parameters<typeof analyzeListingOnce>[0]) {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      return await analyzeListingOnce(listing);
+    } catch (error) {
+      lastError = error;
+      const retryable = Boolean((error as { retryable?: boolean })?.retryable);
+      if (!retryable || attempt === 3) throw error;
+      const delayMs = attempt === 1 ? 5000 : 15000;
+      console.warn(`Gemini transient error; retrying in ${delayMs}ms (attempt ${attempt + 1}/3)`);
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Gemini analysis failed");
 }
