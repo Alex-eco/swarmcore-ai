@@ -20,9 +20,7 @@ const BASE_URL = "https://superteam.fun";
 
 function getApiKey() {
   const apiKey = process.env.SUPERTEAM_AGENT_API_KEY;
-  if (!apiKey) {
-    throw new Error("SUPERTEAM_AGENT_API_KEY is not configured");
-  }
+  if (!apiKey) throw new Error("SUPERTEAM_AGENT_API_KEY is not configured");
   return apiKey;
 }
 
@@ -31,12 +29,10 @@ async function publicRequest<T>(path: string): Promise<T> {
     headers: { Accept: "application/json" },
     cache: "no-store",
   });
-
   if (!response.ok) {
     const body = await response.text();
     throw new Error(`Superteam public API ${response.status}: ${body.slice(0, 500)}`);
   }
-
   return response.json() as Promise<T>;
 }
 
@@ -51,12 +47,10 @@ async function superteamRequest<T>(path: string, init: RequestInit = {}): Promis
     },
     cache: "no-store",
   });
-
   if (!response.ok) {
     const body = await response.text();
     throw new Error(`Superteam API ${response.status}: ${body.slice(0, 500)}`);
   }
-
   return response.json() as Promise<T>;
 }
 
@@ -65,11 +59,11 @@ export async function getLiveAgentListings(options: {
   type?: "bounty" | "project" | "hackathon";
   deadline?: string;
 } = {}) {
+  // Superteam Agent API documents a maximum take of 50.
   const params = new URLSearchParams();
-  params.set("take", String(Math.min(Math.max(options.take ?? 20, 1), 100)));
+  params.set("take", String(Math.min(Math.max(options.take ?? 20, 1), 50)));
   if (options.deadline) params.set("deadline", options.deadline);
   if (options.type) params.set("type", options.type);
-
   return superteamRequest<SuperteamListing[] | { listings?: SuperteamListing[] }>(
     `/api/agents/listings/live?${params.toString()}`,
   );
@@ -82,8 +76,7 @@ export async function getOpenAgentListingsFallback(options: { take?: number } = 
   );
   const listings = Array.isArray(payload) ? payload : payload.listings ?? [];
   return listings.filter(
-    (item) =>
-      item.status === "OPEN" &&
+    (item) => item.status === "OPEN" &&
       (item.agentAccess === "AGENT_ALLOWED" || item.agentAccess === "AGENT_ONLY"),
   );
 }
@@ -96,7 +89,6 @@ export async function getListingDetails(slug: string) {
 
 export function normalizeListings(payload: SuperteamListing[] | { listings?: SuperteamListing[] }) {
   const listings = Array.isArray(payload) ? payload : payload.listings ?? [];
-
   return listings.map((item) => ({
     id: item.id ?? null,
     slug: item.slug ?? null,
