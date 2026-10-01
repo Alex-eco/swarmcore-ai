@@ -1,7 +1,6 @@
 import {
   getLiveAgentListings,
   getOpenAgentListingsFallback,
-  getListingDetails,
   normalizeListings,
 } from "../lib/superteam";
 import { analyzeListing } from "../lib/gemini";
@@ -10,11 +9,13 @@ async function main() {
   if (!process.env.SUPERTEAM_AGENT_API_KEY) throw new Error("SUPERTEAM_AGENT_API_KEY is not configured");
   if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
-  // Scan the complete agent-eligible bounty pool, not just the first generic feed page.
-  let payload = await getLiveAgentListings({ take: 100, type: "bounty" });
+  // Official Agent API: server caps `take` at 50.
+  let payload = await getLiveAgentListings({ take: 50, type: "bounty" });
   let listings = normalizeListings(payload);
   let discoverySource = "agent-live:bounty";
 
+  // Public feed is discovery-only. These listings may be marked AGENT_ALLOWED but
+  // can still be hidden from the Agent API by Superteam's sponsor verification filter.
   if (listings.length === 0) {
     const fallback = await getOpenAgentListingsFallback({ take: 100 });
     listings = normalizeListings(fallback).filter((item) => item.type === "bounty" || !item.type);
@@ -25,20 +26,12 @@ async function main() {
     item.agentAccess === "AGENT_ALLOWED" || item.agentAccess === "AGENT_ONLY"
   );
 
-  const detailed = [];
-  for (const listing of allowed) {
-    try {
-      const details = listing.slug ? await getListingDetails(listing.slug) : listing.raw;
-      detailed.push(normalizeListings([details])[0] ?? listing);
-    } catch (error) {
-      detailed.push({
-        ...listing,
-        detailError: error instanceof Error ? error.message : "Unknown details error",
-      });
-    }
-  }
+  // IMPORTANT: do not call the Agent details endpoint for public-feed fallback
+  // listings. The same sponsor-verification visibility filter can legitimately
+  // return 404 even when the listing is visible in /api/listings.
+  const detailed = allowed.map((listing) => listing);
 
-  // Gemini free-tier limit is 20 requests/day. Prioritize higher-value and earlier-deadline bounties.
+  // Gemini free-tier limit is 20 requests/day. Keep each scheduled run small.
   const prioritized = [...detailed].sort((a, b) => {
     const ad = a.deadline ? Date.parse(a.deadline) : Number.MAX_SAFE_INTEGER;
     const bd = b.deadline ? Date.parse(b.deadline) : Number.MAX_SAFE_INTEGER;
@@ -46,8 +39,6 @@ async function main() {
     return JSON.stringify(b.reward ?? "").localeCompare(JSON.stringify(a.reward ?? ""));
   });
 
-  // The free Gemini quota is daily, while this workflow runs every 2 hours.
-  // Keep each scheduled run small so repeated scans do not exhaust the daily budget.
   const analysisLimit = Math.min(3, prioritized.length);
   const results = [];
   for (const listing of prioritized.slice(0, analysisLimit)) {
