@@ -1,12 +1,23 @@
-import { getLiveAgentListings, normalizeListings } from "../lib/superteam";
+import {
+  getLiveAgentListings,
+  getOpenAgentListingsFallback,
+  normalizeListings,
+} from "../lib/superteam";
 import { analyzeListing } from "../lib/gemini";
 
 async function main() {
   if (!process.env.SUPERTEAM_AGENT_API_KEY) throw new Error("SUPERTEAM_AGENT_API_KEY is not configured");
   if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
 
-  const payload = await getLiveAgentListings({ take: 50 });
-  const listings = normalizeListings(payload);
+  let payload = await getLiveAgentListings({ take: 50 });
+  let listings = normalizeListings(payload);
+  let discoverySource = "agent-live";
+
+  if (listings.length === 0) {
+    const fallback = await getOpenAgentListingsFallback({ take: 100 });
+    listings = normalizeListings(fallback);
+    discoverySource = "public-feed-fallback";
+  }
 
   const allowed = listings.filter((item) =>
     item.agentAccess === "AGENT_ALLOWED" || item.agentAccess === "AGENT_ONLY"
@@ -30,6 +41,7 @@ async function main() {
     generatedAt: new Date().toISOString(),
     agent: "SwarmCore",
     username: "swarmcore-purple-22",
+    discoverySource,
     scanned: listings.length,
     agentEligible: allowed.length,
     results,
