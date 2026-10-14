@@ -1,49 +1,40 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-const agents = [
-  { name: "Discover", x: "15%", y: "25%", task: "Find opportunities" },
-  { name: "Guard", x: "27%", y: "70%", task: "Assess risk" },
-  { name: "Verify", x: "73%", y: "25%", task: "Check outcomes" },
-  { name: "Execute", x: "84%", y: "70%", task: "Take action" },
-];
-
 const pillars = [
   {
     number: "01",
     title: "Multi-Agent Orchestration",
     subtitle: "Coordinate intelligence, not just prompts.",
-    body: "Specialized agents discover opportunities, break down work, challenge assumptions and review outputs. SwarmCore coordinates the workflow so each agent has a defined role and the result can be checked before action.",
+    body: "Specialized agents discover opportunities, break down work, challenge assumptions and review outputs. SwarmCore coordinates the workflow so each agent has a defined role and results can be checked before action.",
     tags: ["Delegation", "Specialized agents", "Cross-checking"],
   },
   {
     number: "02",
     title: "Agent Economic Security",
-    subtitle: "Know the cost and risk before acting.",
-    body: "Agents need to account for API costs, uncertain rewards, rejection risk and untrusted instructions. SwarmCore is being designed to evaluate expected value, enforce execution limits and reduce exposure to prompt injection and unsafe actions.",
+    subtitle: "Understand costs and risks before acting.",
+    body: "Autonomous agents need to account for API costs, uncertain rewards, rejection risk and untrusted instructions. SwarmCore is being designed to evaluate expected value, apply execution limits and reduce exposure to prompt injection.",
     tags: ["Cost-aware decisions", "Risk controls", "Prompt-injection defense"],
   },
   {
     number: "03",
     title: "Autonomous Execution & Verified Outcomes",
     subtitle: "Measure results in the real world.",
-    body: "The system discovers tasks, routes work to agents, checks deliverables and tracks acceptance, expenses and payouts. The goal is to optimize for verified outcomes and net economic value—not activity, token usage or task count alone.",
+    body: "The intended workflow discovers tasks, routes work, checks deliverables and tracks acceptance, expenses and payouts. The goal is verified outcomes and net economic value—not activity, token usage or task count alone.",
     tags: ["Task discovery", "Result verification", "Payout tracking"],
   },
 ];
 
+const steps = [
+  ["01", "Discover", "Find relevant tasks and opportunities."],
+  ["02", "Evaluate", "Estimate reward, cost, uncertainty and risk."],
+  ["03", "Execute safely", "Assign work with bounded tool permissions."],
+  ["04", "Verify", "Review the deliverable before submission."],
+  ["05", "Track outcomes", "Record acceptance, actual payouts and expenses."],
+  ["06", "Improve decisions", "Compare forecasts with actual results."],
+];
+
 export default function Home() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => setActive((value) => (value + 1) % agents.length), 1800);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <main>
-      <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#05070b]/85 backdrop-blur-xl">
+      <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-[#05070b]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <a href="#" className="font-mono text-sm font-bold tracking-[.28em]">SWARMCORE</a>
           <div className="hidden gap-7 text-sm text-slate-400 sm:flex">
@@ -65,33 +56,44 @@ export default function Home() {
               Make autonomous AI <span className="text-cyan-200">useful, safer, and economically viable.</span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-400">
-              SwarmCore is building infrastructure for AI agents that coordinate work, assess costs and risks before acting, and measure real outcomes. Our first use case is an autonomous agent workflow that discovers and evaluates paid tasks.
+              SwarmCore is building infrastructure for AI agents that coordinate work, assess costs and risks before acting, and measure real outcomes. The first use case is an automated workflow that discovers and evaluates paid tasks.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#platform" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-cyan-100">Explore the platform</a>
+              <a href="#platform" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Explore the platform</a>
               <a href="#contact" className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:border-white/30">Discuss collaboration</a>
             </div>
-            <p className="mt-6 text-xs leading-5 text-slate-500">An evolving prototype. Existing workflow: scheduled opportunity scanning and report generation. Additional capabilities are under development.</p>
+            <p className="mt-6 text-xs leading-5 text-slate-500">Early-stage prototype. Scheduled opportunity scanning and structured report generation are implemented; additional capabilities are in development.</p>
           </div>
 
-          <div className="glow relative h-[390px] overflow-hidden rounded-3xl border border-white/10 bg-[#080c13]/80">
-            <div className="absolute inset-0 grid-bg opacity-40" />
-            <div className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/40 bg-cyan-300/10 shadow-[0_0_70px_rgba(125,211,252,.18)]">
-              <div className="flex h-full items-center justify-center text-center font-mono text-[10px] tracking-widest text-cyan-100">SWARM<br />CORE</div>
-            </div>
-            {agents.map((agent, index) => (
-              <div key={agent.name} className="absolute transition-all duration-700" style={{ left: agent.x, top: agent.y }}>
-                <div className={`h-3 w-3 rounded-full ${index === active ? "bg-cyan-200 shadow-[0_0_22px_rgba(125,211,252,.9)]" : "bg-slate-500"}`} />
-                <div className="mt-2 text-[10px] uppercase tracking-wider text-slate-500">{agent.name}</div>
-                {index === active && <div className="absolute -top-5 left-5 whitespace-nowrap font-mono text-[9px] text-cyan-300">{agent.task} → swarm</div>}
+          <div className="glow relative overflow-hidden rounded-3xl border border-white/10 bg-[#080c13]/80 p-7 sm:p-9">
+            <div className="grid-bg absolute inset-0 opacity-40" />
+            <div className="relative">
+              <div className="mb-7 flex items-center justify-between">
+                <span className="font-mono text-xs tracking-[.2em] text-cyan-200">AGENT WORKFLOW</span>
+                <span className="rounded-full border border-cyan-300/20 px-2 py-1 text-[10px] text-cyan-200">CONCEPT</span>
               </div>
-            ))}
-            <svg className="absolute inset-0 h-full w-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <line x1="15" y1="25" x2="50" y2="50" stroke="currentColor" strokeWidth=".18" />
-              <line x1="27" y1="70" x2="50" y2="50" stroke="currentColor" strokeWidth=".18" />
-              <line x1="73" y1="25" x2="50" y2="50" stroke="currentColor" strokeWidth=".18" />
-              <line x1="84" y1="70" x2="50" y2="50" stroke="currentColor" strokeWidth=".18" />
-            </svg>
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  ["01", "Discover", "Find opportunities"],
+                  ["02", "Evaluate", "Estimate cost & risk"],
+                  ["03", "Execute", "Route bounded work"],
+                  ["04", "Verify", "Check real outcomes"],
+                ].map(([number, title, detail]) => (
+                  <div key={number} className="rounded-xl border border-white/10 bg-[#0b111b]/90 p-4">
+                    <span className="font-mono text-xs text-cyan-300">{number}</span>
+                    <h3 className="mt-3 font-medium">{title}</h3>
+                    <p className="mt-2 text-xs leading-5 text-slate-500">{detail}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 rounded-xl border border-cyan-200/20 bg-cyan-200/[.04] p-4">
+                <div className="flex items-center gap-3">
+                  <span className="h-2 w-2 rounded-full bg-cyan-200" />
+                  <span className="text-sm text-slate-300">Outcome-first orchestration</span>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-slate-500">Target: verified net value after costs, not simply more agent activity.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -100,7 +102,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-xs tracking-[.22em] text-cyan-300">THE PLATFORM · THREE CONNECTED DIRECTIONS</p>
           <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">From coordinated agents to verified economic outcomes.</h2>
-          <p className="mt-5 max-w-2xl leading-7 text-slate-400">Each direction solves a different part of the same problem: how to make autonomous systems act together, stay within safe limits, and deliver measurable value.</p>
+          <p className="mt-5 max-w-2xl leading-7 text-slate-400">Each direction solves a different part of the same problem: how to make autonomous systems work together, stay within safe limits, and deliver measurable value.</p>
           <div className="mt-12 grid gap-4 lg:grid-cols-3">
             {pillars.map((pillar) => (
               <article key={pillar.number} className="flex flex-col rounded-2xl border border-white/10 bg-white/[.025] p-6 transition hover:-translate-y-1 hover:border-cyan-200/25">
@@ -126,14 +128,7 @@ export default function Home() {
               <p className="mt-5 leading-7 text-slate-400">The intended workflow puts economic and safety checks before execution, then uses real outcomes to improve future decisions.</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
-              {[
-                ["01", "Discover", "Find relevant tasks and opportunities."],
-                ["02", "Evaluate", "Estimate reward, cost, uncertainty and risk."],
-                ["03", "Execute safely", "Assign work with bounded tool permissions."],
-                ["04", "Verify", "Review the deliverable before submission."],
-                ["05", "Track outcomes", "Record acceptance, actual payouts and expenses."],
-                ["06", "Improve decisions", "Compare forecasts with actual results."],
-              ].map(([number, title, body]) => (
+              {steps.map(([number, title, body]) => (
                 <div key={number} className="rounded-xl border border-white/10 bg-white/[.02] p-5">
                   <span className="font-mono text-xs text-cyan-300">{number}</span>
                   <h3 className="mt-3 font-medium">{title}</h3>
@@ -149,7 +144,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-xs tracking-[.22em] text-cyan-300">CURRENT BUILD</p>
           <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">Building from a working workflow.</h2>
-          <p className="mt-5 max-w-2xl leading-7 text-slate-400">SwarmCore already has an automated opportunity-scanning workflow that collects listings, filters candidates, runs a bounded analysis step and generates a structured report. We are developing the broader economic-control and verification layer around that foundation.</p>
+          <p className="mt-5 max-w-2xl leading-7 text-slate-400">SwarmCore already has an automated opportunity-scanning workflow that collects listings, filters candidates, runs a bounded analysis step and generates a structured report. The broader economic-control and verification layer is being developed around that foundation.</p>
           <div className="mt-10 grid gap-3 md:grid-cols-3">
             <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[.04] p-6">
               <span className="font-mono text-xs text-cyan-300">IMPLEMENTED</span>
