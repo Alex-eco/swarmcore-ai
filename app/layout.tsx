@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SwarmCore — Multi-Agent AI & Swarm Intelligence",
-  description: "Researching the coordination layer for autonomous AI agents across cloud and edge environments.",
+  title: "SwarmCore — Multi-Agent AI & Agent Economic Security",
+  description: "Infrastructure for coordinating autonomous AI agents, assessing execution costs and risks, and tracking verified outcomes.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
