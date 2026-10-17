@@ -1,33 +1,33 @@
 "use client";
 
 const modules = [
-  { number: "01", status: "ГОТОВО К ПИЛОТУ", statusClass: "border-emerald-300/25 bg-emerald-300/[.06] text-emerald-200", title: "Научный поиск и техническая разведка", body: "Сбор релевантных научных публикаций, патентов и технических материалов. Сводка методов, формул и выводов с прямыми ссылками на первоисточники.", deliverable: "Аннотированный обзор · библиография · сравнительная таблица" },
-  { number: "02", status: "ГОТОВО К ПИЛОТУ", statusClass: "border-emerald-300/25 bg-emerald-300/[.06] text-emerald-200", title: "Интеллект элементной базы", body: "Поиск и сопоставление компонентов по заданным электрическим и частотным параметрам. Сравнение даташитов, ограничений, доступных моделей и альтернатив.", deliverable: "Shortlist компонентов · таблица параметров · ссылки на datasheet" },
-  { number: "03", status: "ПИЛОТ ПО СОГЛАСОВАНИЮ", statusClass: "border-cyan-300/25 bg-cyan-300/[.06] text-cyan-200", title: "Расчёты и проектные рекомендации", body: "Подготовка исходных расчётов, оценка вариантов схемотехники и формирование проверяемых инженерных гипотез с явными допущениями.", deliverable: "Расчётная записка · исходные параметры · план проверки" },
-  { number: "04", status: "ПРОТОТИП / ИНТЕГРАЦИЯ", statusClass: "border-violet-300/25 bg-violet-300/[.06] text-violet-200", title: "Автоматизация инженерных САПР", body: "Разработка скриптов и агентных workflow для автоматизации повторяемых операций в выбранной среде: построение моделей, запуск расчётов и сбор результатов — при наличии поддерживаемого API и лицензии.", deliverable: "Согласованный workflow · скрипт · отчёт о тестировании" },
-  { number: "05", status: "В РАЗРАБОТКЕ", statusClass: "border-amber-300/25 bg-amber-300/[.06] text-amber-200", title: "Полностью готовое СВЧ-устройство", body: "Долгосрочная цель — агентный цикл от требований и выбора элементной базы до моделирования, оптимизации и подготовки комплекта инженерной документации. Готовность устройства должна подтверждаться симуляцией, технологической проверкой и измерениями.", deliverable: "Целевой результат дорожной карты — не заявляется как готовая функция" },
+  { number: "01", status: "PILOT-READY", statusClass: "border-emerald-300/25 bg-emerald-300/[.06] text-emerald-200", title: "Scientific Research & Technical Intelligence", body: "Find and synthesize relevant research papers, patents, and technical documentation. Extract methods, equations, assumptions, and conclusions with traceable links to original sources.", deliverable: "Annotated literature review · bibliography · comparison matrix" },
+  { number: "02", status: "PILOT-READY", statusClass: "border-emerald-300/25 bg-emerald-300/[.06] text-emerald-200", title: "Electronic Component Intelligence", body: "Identify and compare components against electrical, RF, frequency, power, noise, and availability requirements. Review datasheets, constraints, models, and possible alternatives.", deliverable: "Component shortlist · parameter matrix · datasheet links" },
+  { number: "03", status: "SCOPED PILOT", statusClass: "border-cyan-300/25 bg-cyan-300/[.06] text-cyan-200", title: "Engineering Calculations & Design Options", body: "Prepare preliminary calculations, compare circuit and system-level options, and turn assumptions into testable engineering hypotheses.", deliverable: "Calculation note · input assumptions · validation plan" },
+  { number: "04", status: "PROTOTYPE / INTEGRATION", statusClass: "border-violet-300/25 bg-violet-300/[.06] text-violet-200", title: "Engineering CAD / EDA Workflow Automation", body: "Develop scripts and agent workflows for repeatable operations in a selected engineering environment: model setup, simulation runs, and results collection, subject to supported APIs and available licenses.", deliverable: "Agreed workflow · automation script · test report" },
+  { number: "05", status: "IN DEVELOPMENT", statusClass: "border-amber-300/25 bg-amber-300/[.06] text-amber-200", title: "End-to-End Microwave Device Development", body: "Long-term vision: an agent-assisted engineering loop from requirements and component selection through modelling, optimization, and engineering documentation. Device readiness must be demonstrated through appropriate simulation, engineering review, and measurement.", deliverable: "Roadmap objective — not represented as an available finished capability" },
 ];
 
 const workflow = [
-  ["01", "Постановка задачи", "Фиксируем требования, ограничения, рабочую среду и критерии успеха."],
-  ["02", "Сбор доказательств", "Агенты собирают источники, компоненты и исходные данные с отслеживаемыми ссылками."],
-  ["03", "Анализ и проектные варианты", "Формируем сравнимые варианты, расчёты и скрипты с явными допущениями."],
-  ["04", "Проверка инженером", "Инженер проверяет критичные решения; симуляция и измерения не подменяются ответом языковой модели."],
+  ["01", "Define the engineering task", "Agree on requirements, constraints, available tools, and measurable acceptance criteria."],
+  ["02", "Gather traceable evidence", "Agents organize research, component data, and input parameters with source links."],
+  ["03", "Generate options and artifacts", "Prepare comparable approaches, calculations, and scripts with explicit assumptions."],
+  ["04", "Engineer-led validation", "A qualified engineer reviews critical decisions; simulation and measurement are not replaced by an AI answer."],
 ];
 
 const examples = [
-  "Подобрать альтернативы компоненту по частоте, мощности, шуму и доступности.",
-  "Собрать научные публикации по заданной архитектуре фильтра или антенны.",
-  "Подготовить начальный расчёт и план проверки СВЧ-узла.",
-  "Автоматизировать повторяющиеся операции в имеющейся САПР.",
+  "Find component alternatives by frequency, power, noise, and availability.",
+  "Review literature for a specified antenna, filter, or RF architecture.",
+  "Prepare a preliminary calculation and validation plan for an RF subsystem.",
+  "Automate a repeatable step in an existing engineering CAD / EDA workflow.",
 ];
 
 export default function Home() {
   const agents = [
-    { name: "Research", x: 15, y: 24, task: "Публикации" },
-    { name: "Components", x: 26, y: 74, task: "Элементная база" },
-    { name: "Design", x: 74, y: 24, task: "Расчёты" },
-    { name: "Verify", x: 85, y: 74, task: "Проверка" },
+    { name: "Research", x: 15, y: 24, task: "Evidence" },
+    { name: "Components", x: 26, y: 74, task: "Parts data" },
+    { name: "Design", x: 74, y: 24, task: "Calculations" },
+    { name: "Verify", x: 85, y: 74, task: "Review" },
   ];
 
   return (
@@ -36,10 +36,10 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <a href="#" className="font-mono text-sm font-bold tracking-[.28em]">SWARMCORE</a>
           <div className="hidden gap-7 text-sm text-slate-400 md:flex">
-            <a href="#modules" className="hover:text-white">Модули</a>
-            <a href="#workflow" className="hover:text-white">Как работает</a>
-            <a href="#pilot" className="hover:text-white">Пилот</a>
-            <a href="#contact" className="hover:text-white">Контакты</a>
+            <a href="#modules" className="hover:text-white">Capabilities</a>
+            <a href="#workflow" className="hover:text-white">How it works</a>
+            <a href="#pilot" className="hover:text-white">Pilot projects</a>
+            <a href="#contact" className="hover:text-white">Contact</a>
           </div>
           <span className="rounded-full border border-cyan-300/30 bg-cyan-300/5 px-3 py-1 text-[10px] font-semibold tracking-[.12em] text-cyan-200">RF · ELECTRONICS AI</span>
         </div>
@@ -49,18 +49,18 @@ export default function Home() {
         <div className="absolute left-1/2 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-cyan-400/5 blur-3xl" />
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.05fr_.95fr]">
           <div>
-            <p className="mb-5 font-mono text-xs tracking-[.16em] text-cyan-300">SWARMCORE RF & ELECTRONICS · МУЛЬТИАГЕНТНАЯ СИСТЕМА</p>
+            <p className="mb-5 font-mono text-xs tracking-[.16em] text-cyan-300">SWARMCORE RF & ELECTRONICS · MULTI-AGENT ENGINEERING</p>
             <h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] tracking-[-.04em] sm:text-7xl">
-              Ускоряем разработку электроники <span className="text-cyan-200">с помощью AI-агентов.</span>
+              AI Agents for <span className="text-cyan-200">Autonomous RF & Electronics Engineering Development</span>
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-400">
-              SwarmCore RF & Electronics — исследовательское направление по автоматизации инженерных задач: от поиска научных публикаций и элементной базы до расчётов, скриптов САПР и перспективы проектирования СВЧ-устройств полным циклом.
+              A research and engineering automation initiative exploring how coordinated AI agents can accelerate the electronics development lifecycle — from technical research and component intelligence to calculations, CAD workflows, and eventually end-to-end microwave device development.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#pilot" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Обсудить пилот</a>
-              <a href="#modules" className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:border-white/30">Посмотреть модули</a>
+              <a href="#pilot" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Discuss a pilot</a>
+              <a href="#modules" className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:border-white/30">Explore capabilities</a>
             </div>
-            <p className="mt-6 text-xs leading-5 text-slate-500">Проверяемая инженерная автоматизация с человеком в контуре. Объём пилота и критерии приёмки согласуются под конкретную задачу.</p>
+            <p className="mt-6 text-xs leading-5 text-slate-500">Evidence-led engineering automation with a human in the loop. Pilot scope and acceptance criteria are agreed for each use case.</p>
           </div>
 
           <div className="glow relative h-[390px] overflow-hidden rounded-3xl border border-white/10 bg-[#080c13]/80 sm:h-[430px]">
@@ -89,8 +89,8 @@ export default function Home() {
                 </div>
               ))}
               <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between border-t border-white/10 pt-4 font-mono text-[9px] tracking-[.1em] text-slate-500">
-                <span className="flex items-center gap-2"><span className="live-indicator" /> АГЕНТНАЯ АРХИТЕКТУРА</span>
-                <span>ИССЛЕДОВАТЬ / РАССЧИТАТЬ / ПРОВЕРИТЬ</span>
+                <span className="flex items-center gap-2"><span className="live-indicator" /> MULTI-AGENT WORKFLOW</span>
+                <span>RESEARCH / DESIGN / VALIDATE</span>
               </div>
             </div>
           </div>
@@ -100,18 +100,18 @@ export default function Home() {
       <section className="border-t border-white/10 px-6 py-12">
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-3">
           {[
-            ["Исследования", "Источники и технические знания"],
-            ["Проектирование", "Расчёты и автоматизация workflow"],
-            ["Проверяемость", "Ссылки, допущения и инженерный контроль"],
+            ["Research", "Traceable sources and technical evidence"],
+            ["Engineering", "Calculations and workflow automation"],
+            ["Verification", "Explicit assumptions and engineer review"],
           ].map(([title, body]) => <div key={title} className="rounded-2xl border border-white/10 bg-white/[.025] p-5"><p className="text-sm font-semibold text-cyan-200">{title}</p><p className="mt-2 text-sm text-slate-400">{body}</p></div>)}
         </div>
       </section>
 
       <section id="modules" className="border-t border-white/10 px-6 py-24">
         <div className="mx-auto max-w-6xl">
-          <p className="font-mono text-xs tracking-[.22em] text-cyan-300">МОДУЛИ И ДОРОЖНАЯ КАРТА</p>
-          <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">От инженерного поиска — к автоматизированному проектированию.</h2>
-          <p className="mt-5 max-w-2xl leading-7 text-slate-400">Начинаем с задач, для которых можно быстро сформировать проверяемый результат. Более глубокая интеграция с САПР и полный цикл разработки развиваются поэтапно.</p>
+          <p className="font-mono text-xs tracking-[.22em] text-cyan-300">CAPABILITIES & ROADMAP</p>
+          <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">From engineering intelligence to automated design.</h2>
+          <p className="mt-5 max-w-2xl leading-7 text-slate-400">We start with tasks that can produce a reviewable result quickly. Deeper CAD integration and end-to-end development are being explored in stages.</p>
           <div className="mt-12 grid gap-4 lg:grid-cols-2">
             {modules.map((module) => (
               <article key={module.number} className={`flex flex-col rounded-2xl border p-6 transition hover:-translate-y-1 hover:border-cyan-200/25 ${module.number === "05" ? "border-amber-300/20 bg-amber-300/[.025] lg:col-span-2" : "border-white/10 bg-white/[.025]"}`}>
@@ -122,7 +122,7 @@ export default function Home() {
                 <h3 className="mt-5 text-2xl font-semibold tracking-tight">{module.title}</h3>
                 <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{module.body}</p>
                 <div className="mt-6 border-t border-white/10 pt-4">
-                  <p className="text-xs uppercase tracking-[.12em] text-slate-500">Формат результата</p>
+                  <p className="text-xs uppercase tracking-[.12em] text-slate-500">Potential deliverable</p>
                   <p className="mt-2 text-sm text-slate-300">{module.deliverable}</p>
                 </div>
               </article>
@@ -133,11 +133,11 @@ export default function Home() {
 
       <section id="workflow" className="border-t border-white/10 bg-[#070a10] px-6 py-24">
         <div className="mx-auto max-w-6xl">
-          <p className="font-mono text-xs tracking-[.22em] text-cyan-300">КАК РАБОТАЕТ ПИЛОТ</p>
+          <p className="font-mono text-xs tracking-[.22em] text-cyan-300">HOW A PILOT WORKS</p>
           <div className="mt-5 grid gap-10 lg:grid-cols-[.9fr_1.1fr]">
             <div>
-              <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">Конкретная задача. Измеримый результат.</h2>
-              <p className="mt-5 leading-7 text-slate-400">Подстраиваем сценарий под реальные процессы команды, доступную документацию и используемые инструменты. На выходе — артефакт, который инженер может проверить.</p>
+              <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">A defined task. A measurable outcome.</h2>
+              <p className="mt-5 leading-7 text-slate-400">The workflow is tailored to your team's process, available documentation, and engineering tools. The output is an artifact an engineer can inspect and validate.</p>
               <ul className="mt-6 space-y-3 text-sm text-slate-300">
                 {examples.map((example) => <li key={example} className="flex gap-3"><span className="text-cyan-300">↗</span><span>{example}</span></li>)}
               </ul>
@@ -159,19 +159,19 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 rounded-3xl border border-cyan-300/15 bg-gradient-to-br from-cyan-300/[.07] to-violet-400/[.05] p-8 sm:p-12 lg:grid-cols-[1fr_.8fr]">
             <div>
-              <p className="font-mono text-xs tracking-[.22em] text-cyan-300">ИНЖЕНЕРНЫЕ ПИЛОТЫ</p>
-              <h2 className="mt-4 text-4xl font-semibold tracking-tight">Проверим на вашей задаче.</h2>
-              <p className="mt-4 max-w-xl leading-7 text-slate-400">Предложите повторяемую задачу из разработки электроники или СВЧ. Вместе определим исходные данные, критерии качества, границы автоматизации и формат результата.</p>
+              <p className="font-mono text-xs tracking-[.22em] text-cyan-300">ENGINEERING PILOTS</p>
+              <h2 className="mt-4 text-4xl font-semibold tracking-tight">Let's test it on a real task.</h2>
+              <p className="mt-4 max-w-xl leading-7 text-slate-400">Bring a repeatable task from electronics or RF development. We'll define the inputs, quality criteria, automation boundaries, and deliverable together.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-[#05070b]/50 p-6">
-              <p className="text-sm font-semibold">Подходит для первого пилота</p>
+              <p className="text-sm font-semibold">Good candidates for a first pilot</p>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-400">
-                <li>• Поиск и сравнение компонентов</li>
-                <li>• Обзор литературы по инженерной теме</li>
-                <li>• Подготовка расчётов и скриптов</li>
-                <li>• Автоматизация отдельного этапа в САПР</li>
+                <li>• Component research and comparison</li>
+                <li>• Literature review for an engineering topic</li>
+                <li>• Preliminary calculations and scripts</li>
+                <li>• Automation of one step in a CAD / EDA tool</li>
               </ul>
-              <a href="mailto:aiagentquantum@gmail.com?subject=SwarmCore%20RF%20%26%20Electronics%20Pilot" className="mt-7 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Обсудить задачу</a>
+              <a href="mailto:aiagentquantum@gmail.com?subject=SwarmCore%20RF%20%26%20Electronics%20Pilot" className="mt-7 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Discuss a use case</a>
               <p className="mt-4 text-xs leading-5 text-slate-500">aiagentquantum@gmail.com</p>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function Home() {
 
       <section id="contact" className="border-t border-white/10 px-6 py-16">
         <div className="mx-auto max-w-6xl flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-          <div><p className="font-mono text-xs tracking-[.22em] text-cyan-300">SWARMCORE RF & ELECTRONICS</p><p className="mt-2 text-sm text-slate-400">AI-агенты для инженерных исследований и автоматизации разработки.</p></div>
+          <div><p className="font-mono text-xs tracking-[.22em] text-cyan-300">SWARMCORE RF & ELECTRONICS</p><p className="mt-2 text-sm text-slate-400">AI agents for engineering research and development automation.</p></div>
           <a href="mailto:aiagentquantum@gmail.com" className="text-sm text-cyan-200 hover:text-white">aiagentquantum@gmail.com ↗</a>
         </div>
       </section>
@@ -188,9 +188,9 @@ export default function Home() {
       <footer className="border-t border-white/10 px-6 py-8">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 text-xs text-slate-600 sm:flex-row">
           <span>© 2026 SwarmCore</span>
-          <span>RF & Electronics AI · Исследовательское направление</span>
+          <span>RF & Electronics AI · Research initiative</span>
         </div>
-        <p className="mx-auto mt-4 max-w-6xl text-[11px] leading-5 text-slate-600">Статусы отражают формат доступности пилотных работ и текущую дорожную карту, а не сертификацию инженерных результатов. AI-выводы требуют проверки квалифицированным специалистом; электромагнитные характеристики подтверждаются профильной САПР и, где необходимо, измерениями.</p>
+        <p className="mx-auto mt-4 max-w-6xl text-[11px] leading-5 text-slate-600">Capability labels describe pilot availability and the current roadmap; they do not certify engineering outcomes. AI-generated outputs require review by a qualified specialist. Electromagnetic performance must be validated using appropriate engineering simulation and, where necessary, physical measurements.</p>
       </footer>
     </main>
   );
