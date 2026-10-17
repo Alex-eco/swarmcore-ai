@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SwarmCore — Multi-Agent AI & Agent Economic Security",
-  description: "Infrastructure for coordinating autonomous AI agents, assessing execution costs and risks, and tracking verified outcomes.",
+  title: "SwarmCore RF & Electronics — AI-агенты для разработки электроники",
+  description: "Мультиагентная автоматизация инженерных задач: научные публикации, элементная база, расчёты и workflow для разработки СВЧ-устройств.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="ru"><body>{children}</body></html>;
 }
