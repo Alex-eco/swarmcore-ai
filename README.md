@@ -1,74 +1,31 @@
-# SwarmCore
+# SwarmCore RF & Electronics
 
-**Multi-Agent AI & Swarm Intelligence**
+Русскоязычное прикладное направление SwarmCore: AI-агенты для ускорения инженерных исследований и отдельных этапов разработки электроники и СВЧ-устройств.
 
-> Building the coordination layer for autonomous AI.
+## Цель пилота
 
-SwarmCore is an early-stage independent research initiative exploring how autonomous AI agents can collaborate, distribute tasks, verify decisions and act collectively across cloud and edge environments.
+Проверить спрос на ограниченную, проверяемую автоматизацию реальных инженерных задач — без обещания полной автономной разработки готового устройства.
 
-## Research areas
+## Модули и статусы
 
-- Multi-Agent Coordination
-- Swarm Intelligence
-- Agent-to-Agent Communication
-- Collective Verification
-- Edge AI
-- Autonomous Systems
+1. **Научный поиск и техническая разведка — готово к пилоту.** Сбор источников, обзоры и структурированные результаты с прямыми ссылками.
+2. **Интеллект элементной базы — готово к пилоту.** Подбор и сравнение компонентов на основе даташитов и доступных источников.
+3. **Расчёты и проектные рекомендации — пилот по согласованию.** Результаты проверяются инженером и зависят от конкретной задачи.
+4. **Автоматизация инженерных САПР — прототип / интеграция.** Реализация зависит от API, лицензии и выбранной САПР.
+5. **Полностью готовое СВЧ-устройство — в разработке.** Долгосрочная цель, не готовая функция. Требует моделирования, проверки технологичности и подтверждения измерениями.
 
-## Status
+Статус «готово к пилоту» означает, что услуга может быть проверена на согласованном задании в формате инженерного исследования; он не означает наличие полностью автономного программного модуля.
 
-**Research Phase — Experimental — Not yet a commercial platform**
+## Принципы
 
-## Contact
+- Ссылки на первоисточники и даташиты.
+- Разделение фактов, предположений и рекомендаций.
+- Явные ограничения, допущения и критерии приёмки.
+- Инженер остаётся в контуре принятия решений.
+- Не заявлять подтверждённые СВЧ-характеристики без профильной симуляции и необходимых измерений.
 
-aiagentquantum@gmail.com
+## Разработка
 
-## Local development
+Локальный запуск: npm install, затем npm run dev. Сборка: npm run build.
 
-```bash
-npm install
-npm run dev
-```
-
-The project is designed for deployment on Vercel.
-
-
-## SwarmCore Bounty Hunter — Stage 1
-
-The first working integration targets **Superteam Earn agent-eligible listings**.
-
-Current flow:
-
-`Superteam Agent API → SwarmCore scanner → normalized listings`
-
-Stage 1 deliberately does **not**:
-- use a wallet or private key;
-- sign transactions;
-- submit bounties automatically;
-- spend entry fees.
-
-### Configure the Superteam agent
-
-1. Register an agent at the official Superteam Earn Agent interface.
-2. Keep the returned `apiKey` private.
-3. Copy `.env.example` to `.env.local`.
-4. Set:
-
-```env
-SUPERTEAM_AGENT_API_KEY=sk_...
-```
-
-5. Start the app:
-
-```bash
-npm install
-npm run dev
-```
-
-6. Test:
-
-```
-http://localhost:3000/api/bounties?type=bounty&take=20
-```
-
-The next stage will add programmatic filtering for crypto/Web3 bounties and **$0 entry cost**, before introducing the LLM layer.
+Ветка пилота: rf-electronics-pilot. Основная ветка main не изменяется.
