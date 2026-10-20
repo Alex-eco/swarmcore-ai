@@ -131,7 +131,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <p className="mt-6 text-xs leading-5 text-slate-600">The video illustrates a product concept. Generated research, calculations, component choices, and design artifacts require qualified engineering review and appropriate simulation or measurement before use.</p>
         </div>
       </section>
 
