@@ -37,6 +37,7 @@ export default function Home() {
           <a href="#" className="font-mono text-sm font-bold tracking-[.28em]">SWARMCORE</a>
           <div className="hidden gap-7 text-sm text-slate-400 md:flex">
             <a href="#modules" className="hover:text-white">Capabilities</a>
+            <a href="#demo" className="hover:text-white">Product demo</a>
             <a href="#workflow" className="hover:text-white">How it works</a>
             <a href="#pilot" className="hover:text-white">Pilot projects</a>
             <a href="#contact" className="hover:text-white">Contact</a>
@@ -58,6 +59,7 @@ export default function Home() {
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <a href="#pilot" className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-cyan-100">Discuss a pilot</a>
+              <a href="#demo" className="rounded-full border border-cyan-200/30 bg-cyan-200/[.06] px-5 py-3 text-sm font-semibold text-cyan-100 hover:border-cyan-100/60">Watch product demo <span aria-hidden="true">↗</span></a>
               <a href="#modules" className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:border-white/30">Explore capabilities</a>
             </div>
             <p className="mt-6 text-xs leading-5 text-slate-500">Evidence-led engineering automation with a human in the loop. Pilot scope and acceptance criteria are agreed for each use case.</p>
@@ -94,6 +96,42 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="demo" className="border-t border-white/10 px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-10 lg:grid-cols-[.72fr_1.28fr] lg:gap-14">
+            <div>
+              <p className="font-mono text-xs tracking-[.22em] text-cyan-300">PRODUCT WALKTHROUGH · 30 SEC</p>
+              <h2 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">From engineering intent to an RF design workflow.</h2>
+              <p className="mt-5 leading-7 text-slate-400">See how a natural-language task can be organized into a coordinated workflow for research, component intelligence, preliminary calculations, and engineer-led review.</p>
+              <ul className="mt-7 space-y-4 text-sm text-slate-300">
+                <li className="flex items-start gap-3"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[.07] font-mono text-[10px] text-cyan-200">01</span><span><strong className="font-medium text-white">Describe the task</strong><span className="mt-1 block leading-6 text-slate-500">Capture the engineering goal and constraints.</span></span></li>
+                <li className="flex items-start gap-3"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[.07] font-mono text-[10px] text-cyan-200">02</span><span><strong className="font-medium text-white">Coordinate specialist agents</strong><span className="mt-1 block leading-6 text-slate-500">Organize research, component data, and calculations.</span></span></li>
+                <li className="flex items-start gap-3"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[.07] font-mono text-[10px] text-cyan-200">03</span><span><strong className="font-medium text-white">Prepare reviewable outputs</strong><span className="mt-1 block leading-6 text-slate-500">Turn findings into artifacts for engineering validation.</span></span></li>
+              </ul>
+            </div>
+            <div className="glow overflow-hidden rounded-3xl border border-cyan-200/15 bg-[#080c13] p-2 sm:p-3">
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+                <video
+                  className="aspect-video w-full bg-black object-contain"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  aria-label="SwarmCore RF and Electronics product demonstration"
+                >
+                  <source src="/demo/swarmcore-rf.mp4" type="video/mp4" />
+                  Your browser does not support embedded video. <a href="/demo/swarmcore-rf.mp4">Open the demo video.</a>
+                </video>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3 px-3 py-4 sm:px-4">
+                <div><p className="text-sm font-medium text-white">SwarmCore RF & Electronics</p><p className="mt-1 text-xs text-slate-500">Multi-agent engineering automation · Concept demo</p></div>
+                <a href="/demo/swarmcore-rf.mp4" download className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-xs font-medium text-slate-300 transition hover:border-cyan-200/40 hover:text-white">Download video <span aria-hidden="true">↓</span></a>
+              </div>
+            </div>
+          </div>
+          <p className="mt-6 text-xs leading-5 text-slate-600">The video illustrates a product concept. Generated research, calculations, component choices, and design artifacts require qualified engineering review and appropriate simulation or measurement before use.</p>
         </div>
       </section>
 
